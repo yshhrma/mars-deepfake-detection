@@ -2,6 +2,8 @@
 
 This project detects whether a short audio clip is **Genuine (Human)** or **Deepfake (AI-Generated)**. It is built around the provided `for-2sec.zip` dataset, which already contains balanced `training`, `validation`, and `testing` WAV splits.
 
+Live app: [deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app](https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/)
+
 ## Workflow
 
 1. **Dataset intake**
@@ -80,6 +82,12 @@ Outputs:
 ```
 
 ## Run Web App
+
+Hosted Streamlit app:
+
+[https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/](https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/)
+
+Run locally:
 
 ```powershell
 .\.venv\Scripts\streamlit.exe run app.py

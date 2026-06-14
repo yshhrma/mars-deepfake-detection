@@ -1,45 +1,47 @@
 # Deepfake Audio Detection
 
-This project detects whether a short audio clip is **Genuine (Human)** or **Deepfake (AI-Generated)**. It is built around the provided `for-2sec.zip` dataset, which already contains balanced `training`, `validation`, and `testing` WAV splits.
+This project classifies short audio clips as either **Genuine (Human)** or **Deepfake (AI-Generated)**. It is built around the provided `for-2sec.zip` dataset, which comes pre-split into balanced `training`, `validation`, and `testing` WAV partitions.
 
-Live app: [deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app](https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/)
 
-## Workflow
 
-1. **Dataset intake**
-   - Use the provided `for-2sec.zip` directly.
-   - The code reads samples from the archive without extracting the full 1 GB dataset.
-   - Labels come from folder names: `real -> 0`, `fake -> 1`.
+Demo Video: [drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing](https://drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing)
+
+## Pipeline Overview
+
+1. **Dataset Loading**
+   - Directly uses the provided `for-2sec.zip` without extracting the full ~1 GB archive.
+   - Samples are read in-place from the ZIP.
+   - Class labels are inferred from directory names: `real -> 0`, `fake -> 1`.
 
 2. **Preprocessing**
-   - Load WAV audio, convert to mono, resample to 16 kHz when needed.
-   - Normalize amplitude.
-   - Center-crop or pad every clip to 2 seconds.
+   - WAV files are loaded, converted to mono, and resampled to 16 kHz where necessary.
+   - Amplitude normalization is applied to each clip.
+   - All clips are center-cropped or zero-padded to a fixed 2-second length.
 
-3. **Feature extraction**
-   - MFCC summary statistics.
-   - Delta MFCC summary statistics.
-   - Log-mel summary statistics.
+3. **Feature Extraction**
+   - Summary statistics of MFCCs.
+   - Summary statistics of Delta MFCCs.
+   - Summary statistics of Log-Mel spectrograms.
    - Spectral centroid, bandwidth, rolloff, flux, RMS energy, and zero-crossing rate.
 
-4. **Model**
-   - Baseline classifier: `StandardScaler + HistGradientBoostingClassifier`.
-   - Validation EER is used to tune the final decision threshold.
+4. **Model Architecture**
+   - Primary classifier: `StandardScaler + HistGradientBoostingClassifier`.
+   - The decision threshold is tuned using the validation-set EER.
 
-5. **Evaluation**
-   - Reports overall accuracy, EER, macro F1, per-class accuracy, and confusion matrix.
-   - Target thresholds from the assignment:
+5. **Evaluation Metrics**
+   - Outputs overall accuracy, EER, macro F1, per-class accuracy, and the confusion matrix.
+   - Assignment target thresholds:
      - Overall Accuracy >= 80%
      - EER <= 12%
      - F1 Score >= 80%
      - Per-class Accuracy >= 75%
 
-6. **Delivery**
-   - `scripts/train.py`: full training and report generation.
-   - `predict.py`: command-line prediction for a new WAV file.
-   - `app.py`: Streamlit web app for uploaded WAV files.
-   - `reports/`: metrics and confusion matrix after training.
-   - `models/`: trained model after training.
+6. **Project Structure**
+   - `scripts/train.py` — end-to-end training with report generation.
+   - `predict.py` — CLI tool for running inference on a single WAV file.
+   - `app.py` — Streamlit web interface for WAV file uploads.
+   - `reports/` — metrics and confusion matrix saved post-training.
+   - `models/` — serialized model saved post-training.
 
 ## Setup
 
@@ -47,9 +49,9 @@ Live app: [deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app](https:
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-## Train
+## Training
 
-Run a quick smoke test first:
+Run a quick smoke test before full training:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\train.py --limit-per-class 50
@@ -61,13 +63,13 @@ Run the full training job:
 .\.venv\Scripts\python.exe scripts\train.py
 ```
 
-Run the packaged benchmark model used in the current reports:
+Reproduce the packaged benchmark model used in the published reports:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\train.py --include-validation-in-training --operating-threshold 0.02299546758094686
 ```
 
-Outputs:
+Artifacts generated:
 
 - `models/deepfake_audio_model.joblib`
 - `reports/metrics.json`
@@ -75,17 +77,17 @@ Outputs:
 - `reports/confusion_matrix.png`
 - `data/features_cache.joblib`
 
-## Predict One File
+## Single-File Inference
 
 ```powershell
 .\.venv\Scripts\python.exe predict.py path\to\audio.wav
 ```
 
-## Run Web App
+## Web App
 
 Hosted Streamlit app:
 
-[https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/](https://deepfake-audio-detection-bqob6axvmbdm525uj9blua.streamlit.app/)
+
 
 Run locally:
 
@@ -93,11 +95,11 @@ Run locally:
 .\.venv\Scripts\streamlit.exe run app.py
 ```
 
-The app accepts a WAV file and returns the predicted class plus confidence score.
+Upload a WAV file to receive the predicted class and an associated confidence score.
 
-## Current Results
+## Results
 
-The current packaged baseline trains on `training + validation` and evaluates on `testing`.
+The packaged baseline trains on `training + validation` combined and evaluates against the `testing` split.
 
 | Metric | Testing Result | Required |
 | --- | ---: | ---: |
@@ -107,11 +109,11 @@ The current packaged baseline trains on `training + validation` and evaluates on
 | Real Class Accuracy | 89.15% | >= 75% |
 | Fake Class Accuracy | 89.15% | >= 75% |
 
-The stored operating threshold is `0.02299546758094686`, matching the current public testing EER operating point. For private or production evaluation, tune the threshold only on a validation set.
+The stored operating threshold is `0.02299546758094686`, corresponding to the EER operating point on the public test set. For private or production use, always tune the threshold exclusively on a held-out validation set.
 
-## Future Improvements
+## Potential Improvements
 
-- Add a CNN over log-mel spectrograms after the baseline is validated.
-- Add cross-dataset testing with ASVspoof 2019.
-- Support MP3/M4A uploads through `ffmpeg` or `librosa`.
-- Add a notebook that walks through EDA, training, and metric analysis.
+- Incorporate a CNN over log-mel spectrograms once the baseline is validated.
+- Evaluate cross-dataset generalization using ASVspoof 2019.
+- Extend upload support to MP3/M4A formats via `ffmpeg` or `librosa`.
+- Develop a Jupyter notebook covering EDA, model training, and metric analysis.

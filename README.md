@@ -4,7 +4,7 @@ This project classifies short audio clips as either **Genuine (Human)** or **Dee
 
 Deployed App: [yshhrma/mars-deepfake-detection](https://mars-deepfake-detection-ffa5rdyh92qzrwajpanbta.streamlit.app/)
 
-Demo Video: [drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing](https://drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing)
+Demo Video: [https://drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing](https://drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing)
 
 ## Pipeline Overview
 

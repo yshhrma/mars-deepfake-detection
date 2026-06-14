@@ -2,7 +2,7 @@
 
 This project classifies short audio clips as either **Genuine (Human)** or **Deepfake (AI-Generated)**. It is built around the provided `for-2sec.zip` dataset, which comes pre-split into balanced `training`, `validation`, and `testing` WAV partitions.
 
-
+Deployed App: [yshhrma/mars-deepfake-detection](https://mars-deepfake-detection-ffa5rdyh92qzrwajpanbta.streamlit.app/)
 
 Demo Video: [drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing](https://drive.google.com/drive/folders/1C-bwVVRoHUP7Ieq1basdmMfly_NWGsHz?usp=sharing)
 
@@ -87,7 +87,7 @@ Artifacts generated:
 
 Hosted Streamlit app:
 
-
+[mars-deepfake-detection-ffa5rdyh92qzrwajpanbta.streamlit.app](https://mars-deepfake-detection-ffa5rdyh92qzrwajpanbta.streamlit.app/)
 
 Run locally:
 
